@@ -29,6 +29,7 @@ class Library:
         count = 1
         self.checked_out_books_tmp = []
         for selection in selections:
+
             book = self.books[selection['book_index']]
 
             if book.quantity >= selection['quantity']:

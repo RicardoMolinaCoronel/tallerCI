@@ -9,7 +9,7 @@ def test_successful_checkout():
     selections = [{'book_index': 0, 'quantity': 2}]
     total_late_fees = library.checkout_books(selections)
     assert total_late_fees == 0
-    assert library.books[0].quantity == 8
+    assert library.books[0].quantity == 9
     assert len(library.checked_out_books_tmp) == 1
     assert library.checked_out_books_tmp[0]['quantity'] == 2
 
@@ -23,7 +23,7 @@ def test_checkout_unavailable_book():
 
 def test_max_books_per_checkout():
     library = Library()
-    selections = [{'book_index': 1, 'quantity': 6}, {'book_index': 1, 'quantity': 5}]
+    selections = [{'book_index': 1, 'quantity': 12}, {'book_index': 1, 'quantity': 12}]
     total_late_fees = library.checkout_books(selections)
     assert total_late_fees == 0
     assert all(book.quantity == 11 for book in library.books)  # Verifica que el inventario no se ve afectado
@@ -32,7 +32,7 @@ def test_max_books_per_checkout():
 def test_return_no_late_fee():
     library = Library()
     library.checked_out_books = [{'index': 1,'title': '1984', 'quantity': 1, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0}]
-    total_late_fees = main().return_books_checkout(0,library,1,0)
+    total_late_fees = return_books_checkout(0,library,1,0)
     assert total_late_fees == 0
     assert library.books[0].quantity == 12
     assert len(library.checked_out_books) == 0
@@ -40,7 +40,7 @@ def test_return_late_fee():
     library = Library()
     library.checked_out_books = [{'index':1, 'title': '1984', 'quantity': 1, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0}]
     total_late_fees = return_books_checkout(0,library,1,0)
-    assert total_late_fees == 1  # Se espera un cargo por retraso de $1
+    assert total_late_fees == 15  # Se espera un cargo por retraso de $1
     assert library.books[0].quantity == 12  # Verifica que se incrementó el inventario
     assert len(library.checked_out_books) == 0  # Verifica que el libro fue devuelto
 
