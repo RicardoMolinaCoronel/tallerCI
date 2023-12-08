@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="0.179" timestamp="2023-12-07T22:48:34.033424" hostname="DESKTOP-642O1ET"><testcase classname="test_library_management" name="test_successful_checkout" time="0.003" /><testcase classname="test_library_management" name="test_checkout_unavailable_book" time="0.003"><failure message="assert 0 == 5&#10; +  where 0 = &lt;main.Book object at 0x0000015D78643650&gt;.quantity">def test_checkout_unavailable_book():
+        library = Library()
+        selections = [{'book_index': 0, 'quantity': 10}]
+        total_late_fees = library.checkout_books(selections)
+        assert total_late_fees == 0
+&gt;       assert library.books[0].quantity == 5  # Verifica que no se restaron copias del libro
+E       assert 0 == 5
+E        +  where 0 = &lt;main.Book object at 0x0000015D78643650&gt;.quantity
+
+test_library_management.py:19: AssertionError</failure></testcase></testsuite></testsuites>
