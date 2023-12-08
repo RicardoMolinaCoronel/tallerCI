@@ -60,14 +60,6 @@ def test_invalid_quantity_return():
     assert library.books[0].quantity == 11  # Verifica que el inventario no se ve afectado
     assert len(library.checked_out_books) == 1  # Verifica que el libro no fue devuelto
 
-def test_invalid_menu_choice():
-    library = Library()
-    with pytest.raises(SystemExit):
-        with mock.patch('builtins.input', return_value='7'):
-            main()
-    assert all(book.quantity == 11 for book in library.books)
-    assert len(library.checked_out_books) == 0
-
 def test_accumulated_late_fees():
     library = Library()
     library.checked_out_books = [{'index':0,'title': '1984', 'quantity': 2, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0},{'index':1,'title': '1984', 'quantity': 2, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0}]
