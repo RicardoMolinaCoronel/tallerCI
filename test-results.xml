@@ -1,48 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="8" time="0.350" timestamp="2023-12-07T23:52:37.065291" hostname="DESKTOP-642O1ET"><testcase classname="test_library_management" name="test_successful_checkout" time="0.002"><failure message="assert 9 == 8&#10; +  where 9 = &lt;main.Book object at 0x0000018107D33A90&gt;.quantity">def test_successful_checkout():
-        library = Library()
-        selections = [{'book_index': 0, 'quantity': 2}]
-        total_late_fees = library.checkout_books(selections)
-        assert total_late_fees == 0
-&gt;       assert library.books[0].quantity == 8
-E       assert 9 == 8
-E        +  where 9 = &lt;main.Book object at 0x0000018107D33A90&gt;.quantity
-
-test_library_management.py:12: AssertionError</failure></testcase><testcase classname="test_library_management" name="test_checkout_unavailable_book" time="0.001" /><testcase classname="test_library_management" name="test_max_books_per_checkout" time="0.002"><failure message="assert False&#10; +  where False = all(&lt;generator object test_max_books_per_checkout.&lt;locals&gt;.&lt;genexpr&gt; at 0x0000018107CFECF0&gt;)">def test_max_books_per_checkout():
-        library = Library()
-        selections = [{'book_index': 1, 'quantity': 6}, {'book_index': 1, 'quantity': 5}]
-        total_late_fees = library.checkout_books(selections)
-        assert total_late_fees == 0
-&gt;       assert all(book.quantity == 11 for book in library.books)  # Verifica que el inventario no se ve afectado
-E       assert False
-E        +  where False = all(&lt;generator object test_max_books_per_checkout.&lt;locals&gt;.&lt;genexpr&gt; at 0x0000018107CFECF0&gt;)
-
-test_library_management.py:29: AssertionError</failure></testcase><testcase classname="test_library_management" name="test_return_no_late_fee" time="0.002"><failure message="OSError: pytest: reading from stdin while output is captured!  Consider using `-s`.">def test_return_no_late_fee():
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="8" time="0.324" timestamp="2023-12-08T00:08:40.971850" hostname="DESKTOP-642O1ET"><testcase classname="test_library_management" name="test_successful_checkout" time="0.002" /><testcase classname="test_library_management" name="test_checkout_unavailable_book" time="0.001" /><testcase classname="test_library_management" name="test_max_books_per_checkout" time="0.001" /><testcase classname="test_library_management" name="test_return_no_late_fee" time="0.002"><failure message="assert 15 == 0">def test_return_no_late_fee():
         library = Library()
         library.checked_out_books = [{'index': 1,'title': '1984', 'quantity': 1, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0}]
-&gt;       total_late_fees = main().return_books_checkout(0,library,1,0)
+        total_late_fees = return_books_checkout(0,library,1,0)
+&gt;       assert total_late_fees == 0
+E       assert 15 == 0
 
-test_library_management.py:35: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-main.py:90: in main
-    choice = input("Enter your choice (1-5): ")
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-
-self = &lt;_pytest.capture.DontReadFromInput object at 0x00000181062CF290&gt;, size = -1
-
-    def read(self, size: int = -1) -&gt; str:
-&gt;       raise OSError(
-            "pytest: reading from stdin while output is captured!  Consider using `-s`."
-        )
-E       OSError: pytest: reading from stdin while output is captured!  Consider using `-s`.
-
-..\..\AppData\Local\Programs\Python\Python311\Lib\site-packages\_pytest\capture.py:202: OSError</failure></testcase><testcase classname="test_library_management" name="test_return_late_fee" time="0.001"><failure message="assert 15 == 1">def test_return_late_fee():
+test_library_management.py:36: AssertionError</failure></testcase><testcase classname="test_library_management" name="test_return_late_fee" time="0.001"><failure message="assert 11 == 12&#10; +  where 11 = &lt;main.Book object at 0x000001B1F1742B10&gt;.quantity">def test_return_late_fee():
         library = Library()
         library.checked_out_books = [{'index':1, 'title': '1984', 'quantity': 1, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0}]
         total_late_fees = return_books_checkout(0,library,1,0)
-&gt;       assert total_late_fees == 1  # Se espera un cargo por retraso de $1
-E       assert 15 == 1
+        assert total_late_fees == 15  # Se espera un cargo por retraso de $1
+&gt;       assert library.books[0].quantity == 12  # Verifica que se incrementó el inventario
+E       assert 11 == 12
+E        +  where 11 = &lt;main.Book object at 0x000001B1F1742B10&gt;.quantity
 
-test_library_management.py:43: AssertionError</failure></testcase><testcase classname="test_library_management" name="test_invalid_book_index_checkout" time="0.001"><failure message="IndexError: list index out of range">def test_invalid_book_index_checkout():
+test_library_management.py:44: AssertionError</failure></testcase><testcase classname="test_library_management" name="test_invalid_book_index_checkout" time="0.001"><failure message="IndexError: list index out of range">def test_invalid_book_index_checkout():
         library = Library()
         selections = [{'book_index': len(library.books), 'quantity': 1}]
 &gt;       total_late_fees = library.checkout_books(selections)
@@ -50,17 +22,18 @@ test_library_management.py:43: AssertionError</failure></testcase><testcase clas
 test_library_management.py:50: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = &lt;main.Library object at 0x0000018107DE61D0&gt;, selections = [{'book_index': 2, 'quantity': 1}]
+self = &lt;main.Library object at 0x000001B1F1732250&gt;, selections = [{'book_index': 2, 'quantity': 1}]
 
     def checkout_books(self, selections):
         total_late_fees = 0
         count = 1
         self.checked_out_books_tmp = []
         for selection in selections:
+    
 &gt;           book = self.books[selection['book_index']]
 E           IndexError: list index out of range
 
-main.py:32: IndexError</failure></testcase><testcase classname="test_library_management" name="test_invalid_quantity_return" time="0.001" /><testcase classname="test_library_management" name="test_accumulated_late_fees" time="0.001"><failure message="assert 60 == 4">def test_accumulated_late_fees():
+main.py:33: IndexError</failure></testcase><testcase classname="test_library_management" name="test_invalid_quantity_return" time="0.001" /><testcase classname="test_library_management" name="test_accumulated_late_fees" time="0.002"><failure message="assert 60 == 4">def test_accumulated_late_fees():
         library = Library()
         library.checked_out_books = [{'index':0,'title': '1984', 'quantity': 2, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0},{'index':1,'title': '1984', 'quantity': 2, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0}]
         total_late_fees = return_books_checkout(0,library,2,0) + return_books_checkout(1,library,2,0)

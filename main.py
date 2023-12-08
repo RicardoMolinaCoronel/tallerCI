@@ -53,26 +53,6 @@ class Library:
             count += 1
         return total_late_fees
 
-    def return_books(self, return_details):
-        total_late_fees = 0
-
-        for return_detail in return_details:
-            book_title = return_detail['title']
-            quantity_returned = return_detail['quantity']
-
-            for checked_out_book in self.checked_out_books:
-                if checked_out_book['title'] == book_title:
-                    late_fee = self.calculate_late_fee(checked_out_book['due_date'])
-                    total_late_fees += late_fee
-
-                    checked_out_book['quantity'] -= quantity_returned
-                    checked_out_book['late_fees'] += late_fee
-
-                    if checked_out_book['quantity'] == 0:
-                        self.checked_out_books.remove(checked_out_book)
-
-        return total_late_fees
-
     def calculate_late_fee(self, due_date):
         days_overdue = max((datetime.now() - due_date).days, 0)
         return days_overdue
