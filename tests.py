@@ -1,3 +1,4 @@
+from main.py import *
 def test_successful_checkout():
     library = Library()
     selections = [{'book_index': 0, 'quantity': 2}]
