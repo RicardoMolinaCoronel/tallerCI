@@ -12,8 +12,8 @@ class Book:
 class Library:
     def __init__(self):
         self.books = [
-            Book("100 años de soledad", "Author1", 10),
-            Book("1984", "Author2", 15),
+            Book("100 años de soledad", "Author1", 11),
+            Book("1984", "Author2", 11),
             # Add more books as needed
         ]
         self.checked_out_books = []
@@ -189,6 +189,21 @@ def print_checkout_confirmation(selections, total_late_fees, library):
         print("Loan canceled")
 
 
+def return_books_checkout(index, library, quantity_returned, total_fees):
+    if quantity_returned != -1 and 0 < quantity_returned <= library.checked_out_books[index - 1]['quantity']:
+        days = library.calculate_late_fee(library.checked_out_books[index - 1]['due_date'])
+        quantityBooks = library.checked_out_books[index - 1]['quantity']
+        library.checked_out_books[index - 1]['quantity'] -= quantity_returned
+        library.books[library.checked_out_books[index - 1]['index']].quantity += quantity_returned
+        if days > 0:
+            total_fees += days * quantityBooks
+        if library.checked_out_books[index - 1]['quantity'] <= 0:
+            del library.checked_out_books[index - 1]
+        return total_fees
+    else:
+        print("Invalid quantity. Please enter a valid quantity.")
+        return 0
+
 def get_return_input(library):
     total_fees = 0
     print("Those are your loans: ")
@@ -198,17 +213,7 @@ def get_return_input(library):
     index = int(input("Select a loan option: "))
     if index != -1 and 0 < index <= len(library.checked_out_books):
         quantity_returned = int(input("Enter the quantity to return: "))
-        if quantity_returned != -1 and 0 < quantity_returned <= library.checked_out_books[index - 1]['quantity']:
-            days = library.calculate_late_fee(library.checked_out_books[index - 1]['due_date'])
-            quantityBooks = library.checked_out_books[index - 1]['quantity']
-            library.checked_out_books[index - 1]['quantity'] -= quantity_returned
-            library.books[library.checked_out_books[index - 1]['index']].quantity += quantity_returned
-            if days > 0:
-                total_fees += days * quantityBooks
-            if library.checked_out_books[index - 1]['quantity'] <= 0:
-                del library.checked_out_books[index - 1]
-        else:
-            print("Invalid quantity. Please enter a valid quantity.")
+        return_books_checkout(index, library, quantity_returned, total_fees)
     else:
         print("Invalid option. Please enter one of the options that are available.")
 
