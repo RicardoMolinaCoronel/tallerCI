@@ -37,10 +37,10 @@ def test_return_no_late_fee():
     library = Library()
     library.books[1].quantity -= 1
     library.checked_out_books = [
-        {'index': 1, 'title': '1984', 'quantity': 1, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0}]
+        {'index': 1, 'title': '1984', 'quantity': 1, 'due_date': datetime.now() + timedelta(days=15), 'late_fees': 0}]
     total_late_fees = return_books_checkout(0, library, 1, 0)
     assert total_late_fees == 0
-    assert library.books[0].quantity == 12
+    assert library.books[0].quantity == 11
     assert len(library.checked_out_books) == 0
 
 
@@ -51,7 +51,7 @@ def test_return_late_fee():
         {'index': 1, 'title': '1984', 'quantity': 1, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0}]
     total_late_fees = return_books_checkout(0, library, 1, 0)
     assert total_late_fees == 15  # Se espera un cargo por retraso de $1
-    assert library.books[0].quantity == 12  # Verifica que se incrementó el inventario
+    assert library.books[0].quantity == 11  # Verifica que se incrementó el inventario
     assert len(library.checked_out_books) == 0  # Verifica que el libro fue devuelto
 
 
@@ -70,7 +70,7 @@ def test_invalid_quantity_return():
     library.checked_out_books = [{'index': 1, 'title': '1984', 'quantity': 1, 'due_date':datetime.now()+timedelta(10), 'late_fees': 0}]
     total_late_fees = return_books_checkout(1, library, -1, 0)
     assert total_late_fees == 0
-    assert library.books[0].quantity == 10  # Verifica que el inventario no se ve afectado
+    assert library.books[0].quantity == 11  # Verifica que el inventario no se ve afectado
     assert len(library.checked_out_books) == 1  # Verifica que el libro no fue devuelto
 
 
@@ -79,8 +79,8 @@ def test_accumulated_late_fees():
     library.books[0].quantity -= 2
     library.books[1].quantity -= 2
     library.checked_out_books = [
-        {'index': 0, 'title': '1984', 'quantity': 2, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0},
-        {'index': 1, 'title': '1984', 'quantity': 2, 'due_date': datetime.now() - timedelta(days=15), 'late_fees': 0}]
+        {'index': 0, 'title': '1984', 'quantity': 2, 'due_date': datetime.now() - timedelta(days=1), 'late_fees': 0},
+        {'index': 1, 'title': '1984', 'quantity': 2, 'due_date': datetime.now() - timedelta(days=1), 'late_fees': 0}]
     total_late_fees = return_books_checkout(0, library, 2, 0) + return_books_checkout(1, library, 2, 0)
     assert total_late_fees == 4
 

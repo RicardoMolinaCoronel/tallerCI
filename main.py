@@ -29,28 +29,28 @@ class Library:
         count = 1
         self.checked_out_books_tmp = []
         for selection in selections:
+            if -1 < selection['book_index'] < len(self.books):
+                book = self.books[selection['book_index']]
 
-            book = self.books[selection['book_index']]
+                if book.quantity >= selection['quantity']:
+                    book.quantity -= selection['quantity']
 
-            if book.quantity >= selection['quantity']:
-                book.quantity -= selection['quantity']
+                    due_date = (datetime.now() + timedelta(days=14))
+                    # book.due_date = due_date.strftime("%Y-%m-%d")
 
-                due_date = (datetime.now() + timedelta(days=14))
-                # book.due_date = due_date.strftime("%Y-%m-%d")
+                    self.checked_out_books_tmp.append({
+                        'index': selection['book_index'],
+                        'title': book.title,
+                        'quantity': selection['quantity'],
+                        'due_date': due_date,
+                        'late_fees': 0
+                    })
+                    print(f"Selection {count}: {book.title} have enough copies available: {selection['quantity']}.")
 
-                self.checked_out_books_tmp.append({
-                    'index': selection['book_index'],
-                    'title': book.title,
-                    'quantity': selection['quantity'],
-                    'due_date': due_date,
-                    'late_fees': 0
-                })
-                print(f"Selection {count}: {book.title} have enough copies available: {selection['quantity']}.")
-
-            else:
-                print(
-                    f"Selection {count}: Error: {book.title} does not have enough copies available: {selection['quantity']}.")
-            count += 1
+                else:
+                    print(
+                        f"Selection {count}: Error: {book.title} does not have enough copies available: {selection['quantity']}.")
+                count += 1
         return total_late_fees
 
     def calculate_late_fee(self, due_date):
@@ -184,6 +184,7 @@ def return_books_checkout(index, library, quantity_returned, total_fees):
     else:
         print("Invalid quantity. Please enter a valid quantity.")
         return 0
+
 
 def get_return_input(library):
     total_fees = 0
